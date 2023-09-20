@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class new_transaction extends StatefulWidget {
    final Function  addTx;
@@ -10,30 +11,45 @@ class new_transaction extends StatefulWidget {
 
 class _new_transactionState extends State<new_transaction> {
    TextEditingController titleController = TextEditingController();
-
    TextEditingController amountControler = TextEditingController();
+   late DateTime _selectDate=DateTime.now();
 
    void submitData(){
 
      final titleKey=titleController.text;
      final amountKey= double.parse( amountControler.text);
-    // print("titiefndkndkhgjkdgjk${titleController.text}");
      setState(() {
        titleController.clear();
        amountControler.clear();
      });
 
-     if(titleKey.isEmpty|| amountKey<=0){
+     if(titleKey.isEmpty|| amountKey<=0 ){
          return;
      }
      widget.addTx(
          titleKey,
-         amountKey
-       // titleController.text,
-       // amountControler.text
-     );
-     Navigator.of(context).pop(); //herer our widget is pop befor widget
+         amountKey,
+         _selectDate
 
+     );
+     Navigator.of(context).pop(); //here our widget is pop before widget
+   }
+
+   void _presentDatePicker(){
+     showDatePicker(
+         context: context,
+         initialDate:DateTime.now(),
+         firstDate:DateTime(2023,1,1),
+         lastDate:DateTime.now()
+     ).then((value) {
+         if(value==null){
+           return;
+         }
+         setState(() {
+           _selectDate=value;
+         });
+
+     });
    }
 
   @override
@@ -43,7 +59,7 @@ class _new_transactionState extends State<new_transaction> {
       child: Container(
         padding: const EdgeInsets.all(12.0),
         child:   Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
 
           children: [
             TextField(
@@ -51,7 +67,10 @@ class _new_transactionState extends State<new_transaction> {
              // controller:  titleController,
              // onSubmitted: (_)=>submitData,
               onChanged: (val){
-                titleController.text=val;
+                setState(() {
+                  titleController.text=val;
+                });
+
 
               },
             ),
@@ -61,9 +80,33 @@ class _new_transactionState extends State<new_transaction> {
               keyboardType: TextInputType.number,
               //onSubmitted: (_)=>submitData(),
               onChanged: (value){
-                amountControler.text=value;
+                setState(() {
+                  amountControler.text=value;
+                });
+
               },
             ),
+             Container(
+               height: 100,
+               child: Row(
+                   children: [
+                      Padding(
+                       padding: const EdgeInsets.only(left: 2),
+                         child: Text(
+                             _selectDate== DateTime.now()?'No date chosen!':
+                             DateFormat.yMd().format(_selectDate))
+                     ),
+                     Padding(
+                       padding: const EdgeInsets.only(left: 10),
+                       child: ElevatedButton(
+                           onPressed: _presentDatePicker,
+                           child: const Text('Choose date')
+                       ),
+                     )
+                   ],
+                 ),
+
+             ),
              ElevatedButton(
               onPressed:submitData,
               style: const ButtonStyle(

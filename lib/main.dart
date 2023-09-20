@@ -36,17 +36,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   final List<Transaction>_userTransaction=[
-    Transaction(
-        id: 't1',
-        title:'get the souse',
-        amount:19.99,
-        date:DateTime.now()
-    ),
-    Transaction(
-        id: 't2',
-        title:'get the Back',
-        amount:29.99,
-        date:DateTime.now()),
+    // Transaction(
+    //     id: DateTime.now().toString(),
+    //     title:'chose',
+    //     amount:33,
+    //     date:DateTime.now()
+    // )
   ];
 
     List<Transaction> get _recentTransaction{
@@ -55,17 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
       }).toList();
     }
 
-  void _addNewTransaction(String Txtitle,double Txamount){
-    print("dfdgdfgdfgdfgs$Txamount");
+  void _addNewTransaction(String Txtitle,double Txamount,DateTime dat){
     final newTx=Transaction(
         id: DateTime.now().toString(),
         title: Txtitle,
         amount: Txamount,
-        date:DateTime.now()
+        date:dat
     );
     setState(() {
       _userTransaction.add(newTx);
     });
+
   }
 
 
